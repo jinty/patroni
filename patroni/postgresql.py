@@ -38,9 +38,13 @@ def parseurl(url):
 
 class Postgresql:
 
-    def __init__(self, config):
+    def __init__(self, config, app):
         self.config = config
-        self.name = config['name']
+        self.name = config.get('name')
+        if self.name is None and app.plugins.postgresql_name is not None:
+            self.name = app.plugins.postgresql_name()
+        if self.name is None:
+            raise Exception('name is required')
         self.scope = config['scope']
         self.listen_addresses, self.port = config['listen'].split(':')
         self.data_dir = config['data_dir']

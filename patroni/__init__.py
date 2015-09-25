@@ -20,7 +20,7 @@ class Patroni:
     def __init__(self, config):
         self.plugins = get_plugins(config, self)
         self.nap_time = config['loop_wait']
-        self.postgresql = Postgresql(config['postgresql'])
+        self.postgresql = Postgresql(config['postgresql'], self)
         self.ha = Ha(self.postgresql, self.get_dcs(self.postgresql.name, config))
         host, port = config['restapi']['listen'].split(':')
         self.api = RestApiServer(self, config['restapi'])

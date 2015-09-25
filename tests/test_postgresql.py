@@ -2,6 +2,7 @@ import os
 import psycopg2
 import shutil
 import unittest
+import mock
 
 from mock import Mock, patch
 from patroni.dcs import Cluster, Leader, Member
@@ -9,6 +10,10 @@ from patroni.exceptions import PostgresException, PostgresConnectionException
 from patroni.postgresql import Postgresql
 from patroni.utils import RetryFailedError
 from test_ha import false
+
+def mock_app():
+    app = mock.Mock()
+    return app
 
 
 class MockCursor:
@@ -103,7 +108,8 @@ class TestPostgresql(unittest.TestCase):
                                            'on_restart': 'true', 'on_role_change': 'true',
                                            'on_reload': 'true'
                                            },
-                             'restore': 'true'})
+                             'restore': 'true'},
+                             mock_app())
         if not os.path.exists(self.p.data_dir):
             os.makedirs(self.p.data_dir)
         self.leadermem = Member(0, 'leader', 'postgres://replicator:rep-pass@127.0.0.1:5435/postgres', None, None, 28)
@@ -146,7 +152,7 @@ class TestPostgresql(unittest.TestCase):
     def test_create_connection_users(self):
         cfg = self.p.config
         cfg['superuser']['username'] = 'test'
-        p = Postgresql(cfg)
+        p = Postgresql(cfg, mock_app())
         p.create_connection_users()
 
     def test_sync_replication_slots(self):
