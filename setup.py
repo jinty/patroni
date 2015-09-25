@@ -144,7 +144,12 @@ def setup_package():
         cmdclass=cmdclass,
         tests_require=['pytest-cov', 'pytest'],
         command_options=command_options,
-        entry_points={'console_scripts': CONSOLE_SCRIPTS},
+        entry_points={
+            'console_scripts': CONSOLE_SCRIPTS,
+            'patroni.plugin': [
+                'silly_plugin = patroni.silly_plugin:Plugin',
+            ],
+            },
     )
 
 

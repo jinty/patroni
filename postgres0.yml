@@ -12,6 +12,8 @@ etcd:
   ttl: *ttl
   host: 127.0.0.1:4001
   #discovery_srv: my-etcd.domain
+plugins:
+  - silly_plugin
 #zookeeper:
 #  scope: *scope
 #  session_timeout: *ttl
@@ -27,7 +29,6 @@ etcd:
 #      - host2
 #      - host3
 postgresql:
-  name: postgresql0
   scope: *scope
   listen: 127.0.0.1:5432
   connect_address: 127.0.0.1:5432
